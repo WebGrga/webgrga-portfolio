@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.netlify/
+test-results/
+playwright-report/
+.python-deps/
+.asset-work/
+*.log
+.DS_Store
