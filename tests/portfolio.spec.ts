@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test'
 
 test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => sessionStorage.setItem('webgrga-intro-seen', 'true'))
   await page.goto('/')
+  await expect(page.getByRole('dialog', { name: /Portfolio entrance/i })).toBeVisible()
+  await page.getByRole('button', { name: /Enter quietly/i }).click()
+  await expect(page.getByRole('dialog', { name: /Portfolio entrance/i })).toBeHidden({ timeout: 2000 })
 })
 
 test('hero, projects, quote, and final link are present', async ({ page }) => {
@@ -11,30 +13,56 @@ test('hero, projects, quote, and final link are present', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Momentum Lab' })).toHaveCount(1)
   await expect(page.getByText(/Technical work gets our attention/i)).toBeVisible()
   await expect(page.getByRole('link', { name: /Explore my GitHub/i })).toHaveAttribute('href', 'https://github.com/WebGrga')
+  await expect(page.getByText(/Netlify ready/i)).toHaveCount(0)
 })
 
 test('theme control changes the complete page theme', async ({ page }) => {
   await page.getByRole('button', { name: /Open color controls/i }).click()
-  await page.getByRole('button', { name: /Use Electric accent/i }).click()
+  await page.getByRole('button', { name: /Use Ferrari red accent/i }).click()
   await page.getByRole('button', { name: /Use light surface/i }).click()
-  await expect(page.locator('html')).toHaveAttribute('data-accent', 'cyan')
+  await expect(page.locator('html')).toHaveAttribute('data-accent', 'ferrari')
   await expect(page.locator('html')).toHaveAttribute('data-surface', 'light')
+  await expect
+    .poll(() => page.locator('#root').evaluate((element) => getComputedStyle(element).backgroundColor))
+    .toBe('rgba(0, 0, 0, 0)')
 })
 
 test('journey controls update the active story', async ({ page }) => {
   await page.getByRole('button', { name: /Open journey stop 5/i }).click()
+  await expect(page.locator('.journey-stage canvas')).toBeVisible()
   await expect(page.getByRole('heading', { name: /The faster code becomes/i })).not.toBeVisible()
   await expect(page.getByRole('heading', { name: /framing the right problem/i })).not.toBeVisible()
   await expect(page.getByText(/The faster code becomes/i)).toBeVisible()
 })
 
-test('first visit intro is optional and dismissible', async ({ page }) => {
-  await page.addInitScript(() => sessionStorage.removeItem('webgrga-intro-seen'))
-  await page.reload()
+test('driver intro replays from the header and returns on refresh', async ({ page }) => {
+  await page.getByRole('button', { name: /Replay driver entrance/i }).click()
   await expect(page.getByRole('dialog', { name: /Portfolio entrance/i })).toBeVisible()
   await expect(page.getByRole('button', { name: /Start engine/i })).toBeVisible()
   await page.getByRole('button', { name: /Enter quietly/i }).click()
-  await expect(page.getByRole('dialog', { name: /Portfolio entrance/i })).toBeHidden({ timeout: 4000 })
+  await expect(page.getByRole('dialog', { name: /Portfolio entrance/i })).toBeHidden({ timeout: 2000 })
+  await page.reload()
+  await expect(page.getByRole('dialog', { name: /Portfolio entrance/i })).toBeVisible()
+  await expect(page.getByRole('button', { name: /Start engine/i })).toBeVisible()
+})
+
+test('header has breathing room and the ticker always covers the viewport', async ({ page }) => {
+  const layout = await page.evaluate(() => {
+    const header = document.querySelector('.site-header')!.getBoundingClientRect()
+    const logo = document.querySelector('.logo')!.getBoundingClientRect()
+    const actions = document.querySelector('.header-actions')!.getBoundingClientRect()
+    const groupWidths = Array.from(document.querySelectorAll('.telemetry-group')).map((group) => group.getBoundingClientRect().width)
+    return {
+      leftGap: logo.left - header.left,
+      rightGap: header.right - actions.right,
+      viewport: window.innerWidth,
+      groupWidths,
+    }
+  })
+  expect(layout.leftGap).toBeGreaterThan(10)
+  expect(layout.rightGap).toBeGreaterThan(10)
+  expect(layout.groupWidths).toHaveLength(2)
+  expect(layout.groupWidths.every((width) => width >= layout.viewport)).toBe(true)
 })
 
 test('initial viewport has no horizontal overflow and defers the 3D bundle', async ({ page }) => {

@@ -11,6 +11,7 @@ import {
   Code,
   CursorClick,
   DeviceMobile,
+  FlagCheckered,
   GithubLogo,
   Moon,
   Package,
@@ -25,11 +26,12 @@ import { journeyStops, projects, type Project } from './data'
 
 const JourneyScene = lazy(() => import('./JourneyScene'))
 
-type AccentName = 'papaya' | 'acid' | 'cyan' | 'pink'
+type AccentName = 'papaya' | 'ferrari' | 'acid' | 'cyan' | 'pink'
 type SurfaceName = 'dark' | 'light'
 
 const accents: Record<AccentName, { label: string; hex: string }> = {
   papaya: { label: 'Papaya', hex: '#ff7a1a' },
+  ferrari: { label: 'Ferrari red', hex: '#ef1b2d' },
   acid: { label: 'Acid', hex: '#b8ff2c' },
   cyan: { label: 'Electric', hex: '#28e7ff' },
   pink: { label: 'Hot lap', hex: '#ff3d9a' },
@@ -63,17 +65,23 @@ function playEngineSting() {
     oscillator.start(ctx.currentTime + index * 0.035)
     oscillator.stop(ctx.currentTime + 2.2)
   })
+  window.setTimeout(() => { void ctx.close() }, 2400)
 }
 
 function Intro({ onDone }: { onDone: () => void }) {
   const reducedMotion = useReducedMotion()
   const [launched, setLaunched] = useState(false)
+  const timerRef = useRef<number | null>(null)
+
+  useEffect(() => () => {
+    if (timerRef.current) window.clearTimeout(timerRef.current)
+  }, [])
 
   const begin = (sound: boolean) => {
+    if (launched) return
     if (sound) playEngineSting()
     setLaunched(true)
-    window.sessionStorage.setItem('webgrga-intro-seen', 'true')
-    window.setTimeout(onDone, reducedMotion ? 250 : 2300)
+    timerRef.current = window.setTimeout(onDone, reducedMotion ? 180 : sound ? 2300 : 480)
   }
 
   return (
@@ -93,12 +101,12 @@ function Intro({ onDone }: { onDone: () => void }) {
       >
         <span className="broadcast-tag">DRIVER 44 · DEVELOPER CLASS</span>
         <h2>ROKO<br />GRGA</h2>
-        <p>One needlessly dramatic entrance. Five very real projects.</p>
+        <p>One needlessly dramatic entrance. Replay it anytime from the chequered flag.</p>
         <div className="intro-actions">
-          <button className="button button-primary" onClick={() => begin(true)}>
+          <button className="button button-primary" onClick={() => begin(true)} disabled={launched}>
             <SpeakerHigh weight="fill" /> Start engine
           </button>
-          <button className="button button-quiet" onClick={() => begin(false)}>
+          <button className="button button-quiet" onClick={() => begin(false)} disabled={launched}>
             <SpeakerSlash /> Enter quietly
           </button>
         </div>
@@ -115,9 +123,9 @@ function Intro({ onDone }: { onDone: () => void }) {
       </motion.div>
       <motion.div
         className="intro-stats"
-        initial={{ y: 90, opacity: 0 }}
-        animate={launched ? { y: 0, opacity: 1 } : { y: 90, opacity: 0 }}
-        transition={{ delay: reducedMotion ? 0 : 0.65, duration: 0.55 }}
+        initial={{ y: 24, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: reducedMotion ? 0 : 0.8, duration: 0.55 }}
       >
         <span><b>05</b> public projects</span>
         <span><b>04</b> platforms</span>
@@ -293,10 +301,6 @@ function Journey({ accent, reducedMotion }: { accent: AccentName; reducedMotion:
         <h2 id="journey-title">No straight line.<br />Better scenery.</h2>
       </div>
       <div className="journey-stage" ref={stageRef}>
-        <svg className="journey-path" viewBox="0 0 620 320" preserveAspectRatio="none" aria-hidden="true">
-          <path className="journey-path-shadow" d="M34 274 C104 58 176 54 228 170 S342 292 390 98 S520 54 586 210" />
-          <path className="journey-path-light" d="M34 274 C104 58 176 54 228 170 S342 292 390 98 S520 54 586 210" />
-        </svg>
         {sceneReady && (
           <Suspense fallback={<div className="journey-loading">Plotting the unnecessarily scenic route...</div>}>
             <JourneyScene active={active} accent={accents[accent].hex} reducedMotion={reducedMotion} />
@@ -311,6 +315,7 @@ function Journey({ accent, reducedMotion }: { accent: AccentName; reducedMotion:
         </div>
       </div>
       <motion.div
+        key={stop.label}
         className="journey-copy"
         initial={reducedMotion ? false : { opacity: 0, x: 35 }}
         animate={{ opacity: 1, x: 0 }}
@@ -330,7 +335,7 @@ function Journey({ accent, reducedMotion }: { accent: AccentName; reducedMotion:
 
 export default function App() {
   const reducedMotion = useReducedMotion() ?? false
-  const [showIntro, setShowIntro] = useState(() => !window.sessionStorage.getItem('webgrga-intro-seen'))
+  const [showIntro, setShowIntro] = useState(true)
   const [accent, setAccent] = useState<AccentName>(() => (window.localStorage.getItem('webgrga-accent') as AccentName) || 'papaya')
   const [surface, setSurface] = useState<SurfaceName>(() => (window.localStorage.getItem('webgrga-surface') as SurfaceName) || 'dark')
   const heroRef = useRef<HTMLElement>(null)
@@ -363,8 +368,13 @@ export default function App() {
           <a href="#journey">Journey</a>
           <a href="#thinking">Thinking</a>
         </nav>
-        <a className="header-github" href="https://github.com/WebGrga" target="_blank" rel="noreferrer"><GithubLogo weight="fill" /> GitHub</a>
-        <ThemeControl accent={accent} surface={surface} onAccent={setAccent} onSurface={setSurface} />
+        <div className="header-actions">
+          <button className="replay-button" onClick={() => setShowIntro(true)} aria-label="Replay driver entrance">
+            <FlagCheckered weight="fill" /><span>Intro</span>
+          </button>
+          <ThemeControl accent={accent} surface={surface} onAccent={setAccent} onSurface={setSurface} />
+          <a className="header-github" href="https://github.com/WebGrga" target="_blank" rel="noreferrer"><GithubLogo weight="fill" /> GitHub</a>
+        </div>
       </header>
 
       <main id="main">
@@ -400,9 +410,14 @@ export default function App() {
         </section>
 
         <div className="telemetry-strip" aria-label="Portfolio highlights">
-          <div>
-            <span>REACT</span><b>●</b><span>TYPESCRIPT</span><b>●</b><span>.NET</span><b>●</b><span>KOTLIN</span><b>●</b><span>PYTHON</span><b>●</b><span>LOCAL-FIRST</span><b>●</b>
-            <span aria-hidden="true">REACT</span><b aria-hidden="true">●</b><span aria-hidden="true">TYPESCRIPT</span><b aria-hidden="true">●</b><span aria-hidden="true">.NET</span><b aria-hidden="true">●</b><span aria-hidden="true">KOTLIN</span><b aria-hidden="true">●</b><span aria-hidden="true">PYTHON</span><b aria-hidden="true">●</b><span aria-hidden="true">LOCAL-FIRST</span><b aria-hidden="true">●</b>
+          <div className="telemetry-track">
+            {[false, true].map((duplicate) => (
+              <div className="telemetry-group" aria-hidden={duplicate || undefined} key={String(duplicate)}>
+                {['REACT', 'TYPESCRIPT', '.NET', 'KOTLIN', 'PYTHON', 'LOCAL-FIRST'].map((item) => (
+                  <span className="telemetry-item" key={item}><span>{item}</span><b aria-hidden="true">/</b></span>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -461,7 +476,6 @@ export default function App() {
 
       <footer className="site-footer">
         <span>© {new Date().getFullYear()} Roko Grga</span>
-        <span>Built for webgrga.com · Netlify ready</span>
         <a href="#top">Back to the grid <ArrowRight /></a>
       </footer>
     </>

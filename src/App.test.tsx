@@ -38,11 +38,11 @@ describe('portfolio', () => {
   it('changes the page-wide accent and surface theme', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: /open color controls/i }))
-    fireEvent.click(screen.getByRole('button', { name: /use acid accent/i }))
+    fireEvent.click(screen.getByRole('button', { name: /use Ferrari red accent/i }))
     fireEvent.click(screen.getByRole('button', { name: /use light surface/i }))
-    expect(document.documentElement.dataset.accent).toBe('acid')
+    expect(document.documentElement.dataset.accent).toBe('ferrari')
     expect(document.documentElement.dataset.surface).toBe('light')
-    expect(window.localStorage.getItem('webgrga-accent')).toBe('acid')
+    expect(window.localStorage.getItem('webgrga-accent')).toBe('ferrari')
   })
 
   it('moves through the journey with accessible controls', () => {
