@@ -8,15 +8,63 @@ type JourneySceneProps = {
   reducedMotion: boolean
 }
 
-const routePoints = [
-  new THREE.Vector3(-6.1, 0, 1.25),
-  new THREE.Vector3(-3.4, 0, -0.85),
-  new THREE.Vector3(-0.55, 0, 0.65),
-  new THREE.Vector3(2.35, 0, -1.05),
-  new THREE.Vector3(5.8, 0, 0.75),
+const trackControlPoints = [
+  new THREE.Vector3(-5.9, 0, 0.9),
+  new THREE.Vector3(-4.7, 0, 2.8),
+  new THREE.Vector3(-1.9, 0, 2.35),
+  new THREE.Vector3(0.2, 0, 3.05),
+  new THREE.Vector3(3.75, 0, 2.25),
+  new THREE.Vector3(5.7, 0, 0.25),
+  new THREE.Vector3(4.45, 0, -2.55),
+  new THREE.Vector3(1.55, 0, -2.9),
+  new THREE.Vector3(-0.25, 0, -1.55),
+  new THREE.Vector3(-2.9, 0, -2.85),
+  new THREE.Vector3(-5.65, 0, -1.65),
 ]
 
-const stopProgress = [0, 0.24, 0.5, 0.74, 1]
+const stopProgress = [0.03, 0.22, 0.42, 0.62, 0.82]
+
+function createTrackGeometry(curve: THREE.CatmullRomCurve3, halfWidth: number, segments: number) {
+  const positions: number[] = []
+  const uvs: number[] = []
+  const indices: number[] = []
+  const point = new THREE.Vector3()
+  const tangent = new THREE.Vector3()
+  const normal = new THREE.Vector3()
+
+  for (let index = 0; index <= segments; index += 1) {
+    const progress = index / segments
+    curve.getPointAt(progress, point)
+    curve.getTangentAt(progress, tangent).normalize()
+    normal.set(-tangent.z, 0, tangent.x).normalize()
+    const left = point.clone().addScaledVector(normal, halfWidth)
+    const right = point.clone().addScaledVector(normal, -halfWidth)
+    positions.push(left.x, 0, left.z, right.x, 0, right.z)
+    uvs.push(0, progress * 8, 1, progress * 8)
+
+    if (index < segments) {
+      const offset = index * 2
+      indices.push(offset, offset + 2, offset + 1, offset + 2, offset + 3, offset + 1)
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry()
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2))
+  geometry.setIndex(indices)
+  geometry.computeVertexNormals()
+  return geometry
+}
+
+function createOffsetCurve(curve: THREE.CatmullRomCurve3, offset: number) {
+  const points = Array.from({ length: 120 }, (_, index) => {
+    const progress = index / 120
+    const point = curve.getPointAt(progress)
+    const tangent = curve.getTangentAt(progress).normalize()
+    return point.add(new THREE.Vector3(-tangent.z, 0.025, tangent.x).normalize().multiplyScalar(offset))
+  })
+  return new THREE.CatmullRomCurve3(points, true, 'catmullrom', 0.45)
+}
 
 function Landmark({ index, point, active, accent }: {
   index: number
@@ -25,7 +73,7 @@ function Landmark({ index, point, active, accent }: {
   accent: string
 }) {
   const side = index % 2 === 0 ? 1 : -1
-  const position: [number, number, number] = [point.x, 0.15, point.z + side * 1.05]
+  const position: [number, number, number] = [point.x, 0.15, point.z]
   const neutral = active ? '#4b4f57' : '#292c32'
   const glow = active ? 2.8 : 0.35
 
@@ -130,6 +178,57 @@ function Landmark({ index, point, active, accent }: {
   )
 }
 
+function TrackKerbs({ curve, accent }: { curve: THREE.CatmullRomCurve3; accent: string }) {
+  const blocks = useMemo(() => Array.from({ length: 52 }, (_, index) => {
+    const progress = index / 52
+    const point = curve.getPointAt(progress)
+    const tangent = curve.getTangentAt(progress).normalize()
+    const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize()
+    return {
+      point,
+      normal,
+      rotation: -Math.atan2(tangent.z, tangent.x),
+      color: index % 2 === 0 ? accent : '#e4e2dc',
+    }
+  }), [accent, curve])
+
+  return (
+    <group>
+      {blocks.flatMap((block, index) => [-1, 1].map((side) => {
+        const position = block.point.clone().addScaledVector(block.normal, side * 0.67)
+        return (
+          <mesh key={`${index}-${side}`} position={[position.x, 0.025, position.z]} rotation={[0, block.rotation, 0]} receiveShadow>
+            <boxGeometry args={[0.39, 0.05, 0.15]} />
+            <meshStandardMaterial color={block.color} roughness={0.7} />
+          </mesh>
+        )
+      }))}
+    </group>
+  )
+}
+
+function StartingGrid({ curve }: { curve: THREE.CatmullRomCurve3 }) {
+  const progress = stopProgress[0] - 0.015
+  const point = curve.getPointAt(progress)
+  const tangent = curve.getTangentAt(progress).normalize()
+  const rotation = -Math.atan2(tangent.z, tangent.x)
+
+  return (
+    <group position={[point.x, 0.038, point.z]} rotation={[0, rotation, 0]}>
+      {Array.from({ length: 10 }, (_, index) => {
+        const row = Math.floor(index / 5)
+        const column = index % 5
+        return (
+          <mesh key={index} position={[(row - 0.5) * 0.17, 0, (column - 2) * 0.2]}>
+            <boxGeometry args={[0.16, 0.025, 0.19]} />
+            <meshStandardMaterial color={(row + column) % 2 === 0 ? '#e9e7df' : '#16181d'} roughness={0.74} />
+          </mesh>
+        )
+      })}
+    </group>
+  )
+}
+
 function FormulaCar({ curve, active, accent, reducedMotion }: {
   curve: THREE.CatmullRomCurve3
   active: number
@@ -205,16 +304,17 @@ function FormulaCar({ curve, active, accent, reducedMotion }: {
 function JourneyWorld({ active, accent, reducedMotion }: JourneySceneProps) {
   const world = useRef<THREE.Group>(null)
   const { camera, size } = useThree()
-  const curve = useMemo(() => new THREE.CatmullRomCurve3(routePoints, false, 'catmullrom', 0.45), [])
-  const road = useMemo(() => new THREE.TubeGeometry(curve, 160, 0.22, 10, false), [curve])
-  const leftRail = useMemo(() => new THREE.TubeGeometry(
-    new THREE.CatmullRomCurve3(routePoints.map((point) => point.clone().add(new THREE.Vector3(0, 0.03, 0.25))), false, 'catmullrom', 0.45),
-    160, 0.018, 6, false,
-  ), [])
-  const rightRail = useMemo(() => new THREE.TubeGeometry(
-    new THREE.CatmullRomCurve3(routePoints.map((point) => point.clone().add(new THREE.Vector3(0, 0.03, -0.25))), false, 'catmullrom', 0.45),
-    160, 0.018, 6, false,
-  ), [])
+  const curve = useMemo(() => new THREE.CatmullRomCurve3(trackControlPoints, true, 'catmullrom', 0.45), [])
+  const road = useMemo(() => createTrackGeometry(curve, 0.59, 260), [curve])
+  const edgeLines = useMemo(() => [-0.57, 0.57].map((offset) => (
+    new THREE.TubeGeometry(createOffsetCurve(curve, offset), 180, 0.018, 6, true)
+  )), [curve])
+  const landmarkPoints = useMemo(() => stopProgress.map((progress, index) => {
+    const point = curve.getPointAt(progress)
+    const tangent = curve.getTangentAt(progress).normalize()
+    const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize()
+    return point.addScaledVector(normal, (index % 2 === 0 ? 1 : -1) * 1.45)
+  }), [curve])
 
   useEffect(() => {
     camera.lookAt(0, 0.15, 0)
@@ -222,10 +322,12 @@ function JourneyWorld({ active, accent, reducedMotion }: JourneySceneProps) {
 
   useFrame((state, delta) => {
     if (!world.current) return
-    const target = routePoints[active]
-    const followStrength = size.width / size.height < 1.15 ? 0.55 : 0.28
+    const target = curve.getPointAt(stopProgress[active])
+    const aspect = size.width / size.height
+    const followStrength = aspect < 1.15 ? 0.42 : 0.09
     camera.position.x = THREE.MathUtils.damp(camera.position.x, target.x * followStrength, 2.2, delta)
     camera.lookAt(camera.position.x * 0.2, 0.1, 0)
+    world.current.position.x = THREE.MathUtils.damp(world.current.position.x, aspect > 1.7 ? -1.25 : 0, 2.2, delta)
     if (!reducedMotion) {
       world.current.rotation.z = THREE.MathUtils.damp(world.current.rotation.z, -state.pointer.x * 0.012, 4, delta)
     }
@@ -233,15 +335,17 @@ function JourneyWorld({ active, accent, reducedMotion }: JourneySceneProps) {
 
   return (
     <group ref={world} rotation={[-0.03, 0, 0]}>
-      <mesh geometry={road} receiveShadow>
-        <meshStandardMaterial color="#15171b" metalness={0.12} roughness={0.88} />
+      <mesh geometry={road} receiveShadow position={[0, 0.012, 0]}>
+        <meshStandardMaterial color="#22252b" metalness={0.08} roughness={0.94} side={THREE.DoubleSide} />
       </mesh>
-      {[leftRail, rightRail].map((geometry, index) => (
+      {edgeLines.map((geometry, index) => (
         <mesh geometry={geometry} key={index}>
-          <meshStandardMaterial color={accent} emissive={accent} emissiveIntensity={1.7} />
+          <meshStandardMaterial color="#e4e2dc" emissive="#e4e2dc" emissiveIntensity={0.18} />
         </mesh>
       ))}
-      {routePoints.map((point, index) => (
+      <TrackKerbs curve={curve} accent={accent} />
+      <StartingGrid curve={curve} />
+      {landmarkPoints.map((point, index) => (
         <Landmark key={index} index={index} point={point} active={index === active} accent={accent} />
       ))}
       <FormulaCar curve={curve} active={active} accent={accent} reducedMotion={reducedMotion} />
@@ -255,7 +359,7 @@ export default function JourneyScene(props: JourneySceneProps) {
       aria-hidden="true"
       className="journey-canvas"
       style={{ position: 'absolute', inset: 0 }}
-      camera={{ position: [0, 5.8, 10.8], fov: 43 }}
+      camera={{ position: [0, 7.1, 11.8], fov: 43 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       shadows

@@ -17,8 +17,6 @@ import {
   Package,
   Palette,
   ShieldCheck,
-  SpeakerHigh,
-  SpeakerSlash,
   Sun,
   X,
 } from '@phosphor-icons/react'
@@ -31,41 +29,10 @@ type SurfaceName = 'dark' | 'light'
 
 const accents: Record<AccentName, { label: string; hex: string }> = {
   papaya: { label: 'Papaya', hex: '#ff7a1a' },
-  ferrari: { label: 'Ferrari red', hex: '#ef1b2d' },
+  ferrari: { label: 'Rosso', hex: '#ef1b2d' },
   acid: { label: 'Acid', hex: '#b8ff2c' },
   cyan: { label: 'Electric', hex: '#28e7ff' },
   pink: { label: 'Hot lap', hex: '#ff3d9a' },
-}
-
-function playEngineSting() {
-  const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-  if (!AudioContextClass) return
-  const ctx = new AudioContextClass()
-  const master = ctx.createGain()
-  const filter = ctx.createBiquadFilter()
-  master.gain.setValueAtTime(0.0001, ctx.currentTime)
-  master.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.06)
-  master.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 2.15)
-  filter.type = 'lowpass'
-  filter.frequency.setValueAtTime(380, ctx.currentTime)
-  filter.frequency.exponentialRampToValueAtTime(3400, ctx.currentTime + 1.35)
-  filter.Q.value = 5
-  filter.connect(master)
-  master.connect(ctx.destination)
-
-  ;[55, 82.41, 110].forEach((frequency, index) => {
-    const oscillator = ctx.createOscillator()
-    const gain = ctx.createGain()
-    oscillator.type = index === 0 ? 'sawtooth' : 'square'
-    oscillator.frequency.setValueAtTime(frequency, ctx.currentTime)
-    oscillator.frequency.exponentialRampToValueAtTime(frequency * 2.2, ctx.currentTime + 1.45)
-    gain.gain.value = index === 0 ? 0.58 : 0.12
-    oscillator.connect(gain)
-    gain.connect(filter)
-    oscillator.start(ctx.currentTime + index * 0.035)
-    oscillator.stop(ctx.currentTime + 2.2)
-  })
-  window.setTimeout(() => { void ctx.close() }, 2400)
 }
 
 function Intro({ onDone }: { onDone: () => void }) {
@@ -77,11 +44,10 @@ function Intro({ onDone }: { onDone: () => void }) {
     if (timerRef.current) window.clearTimeout(timerRef.current)
   }, [])
 
-  const begin = (sound: boolean) => {
+  const begin = () => {
     if (launched) return
-    if (sound) playEngineSting()
     setLaunched(true)
-    timerRef.current = window.setTimeout(onDone, reducedMotion ? 180 : sound ? 2300 : 480)
+    timerRef.current = window.setTimeout(onDone, reducedMotion ? 180 : 1100)
   }
 
   return (
@@ -103,11 +69,8 @@ function Intro({ onDone }: { onDone: () => void }) {
         <h2>ROKO<br />GRGA</h2>
         <p>One needlessly dramatic entrance. Replay it anytime from the chequered flag.</p>
         <div className="intro-actions">
-          <button className="button button-primary" onClick={() => begin(true)} disabled={launched}>
-            <SpeakerHigh weight="fill" /> Start engine
-          </button>
-          <button className="button button-quiet" onClick={() => begin(false)} disabled={launched}>
-            <SpeakerSlash /> Enter quietly
+          <button className="button button-primary" onClick={begin} disabled={launched}>
+            <FlagCheckered weight="fill" /> Race in
           </button>
         </div>
       </motion.div>
@@ -127,7 +90,7 @@ function Intro({ onDone }: { onDone: () => void }) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: reducedMotion ? 0 : 0.8, duration: 0.55 }}
       >
-        <span><b>05</b> public projects</span>
+        <span><b>05</b> featured projects</span>
         <span><b>04</b> platforms</span>
         <span><b>00</b> patience for beige</span>
       </motion.div>
@@ -301,34 +264,36 @@ function Journey({ accent, reducedMotion }: { accent: AccentName; reducedMotion:
         <h2 id="journey-title">No straight line.<br />Better scenery.</h2>
       </div>
       <div className="journey-stage" ref={stageRef}>
-        {sceneReady && (
-          <Suspense fallback={<div className="journey-loading">Plotting the unnecessarily scenic route...</div>}>
-            <JourneyScene active={active} accent={accents[accent].hex} reducedMotion={reducedMotion} />
-          </Suspense>
-        )}
-        <div className="journey-dots" aria-label="Journey stops">
-          {journeyStops.map((item, index) => (
-            <button key={item.label} className={index === active ? 'active' : ''} onClick={() => setActive(index)} aria-label={`Open journey stop ${index + 1}: ${item.label}`}>
-              <span>{index + 1}</span>
-            </button>
-          ))}
+        <div className="journey-track">
+          {sceneReady && (
+            <Suspense fallback={<div className="journey-loading">Plotting the unnecessarily scenic route...</div>}>
+              <JourneyScene active={active} accent={accents[accent].hex} reducedMotion={reducedMotion} />
+            </Suspense>
+          )}
+          <div className="journey-dots" aria-label="Journey stops">
+            {journeyStops.map((item, index) => (
+              <button key={item.label} className={index === active ? 'active' : ''} onClick={() => setActive(index)} aria-label={`Open journey stop ${index + 1}: ${item.label}`}>
+                <span>{index + 1}</span>
+              </button>
+            ))}
+          </div>
         </div>
+        <motion.div
+          key={stop.label}
+          className="journey-copy"
+          initial={reducedMotion ? false : { opacity: 0, x: 35 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <div><span>{stop.label}</span><small>{stop.era}</small></div>
+          <h3>{stop.title}</h3>
+          <p>{stop.body}</p>
+          <div className="journey-buttons">
+            <button onClick={() => setActive((active - 1 + journeyStops.length) % journeyStops.length)} aria-label="Previous journey stop"><ArrowLeft /></button>
+            <span>{String(active + 1).padStart(2, '0')} / {String(journeyStops.length).padStart(2, '0')}</span>
+            <button onClick={() => setActive((active + 1) % journeyStops.length)} aria-label="Next journey stop"><ArrowRight /></button>
+          </div>
+        </motion.div>
       </div>
-      <motion.div
-        key={stop.label}
-        className="journey-copy"
-        initial={reducedMotion ? false : { opacity: 0, x: 35 }}
-        animate={{ opacity: 1, x: 0 }}
-      >
-        <div><span>{stop.label}</span><small>{stop.era}</small></div>
-        <h3>{stop.title}</h3>
-        <p>{stop.body}</p>
-        <div className="journey-buttons">
-          <button onClick={() => setActive((active - 1 + journeyStops.length) % journeyStops.length)} aria-label="Previous journey stop"><ArrowLeft /></button>
-          <span>{String(active + 1).padStart(2, '0')} / {String(journeyStops.length).padStart(2, '0')}</span>
-          <button onClick={() => setActive((active + 1) % journeyStops.length)} aria-label="Next journey stop"><ArrowRight /></button>
-        </div>
-      </motion.div>
     </section>
   )
 }
@@ -399,7 +364,7 @@ export default function App() {
             <div className="portrait-halo" />
             <img src="/assets/roko-driver.webp" fetchPriority="high" alt="Roko Grga wearing sunglasses and a fictional charcoal racing suit" />
             <div className="driver-card">
-              <span>DRIVER</span><strong>ROKO GRGA</strong><em>FULL-STACK · 5 PROJECTS</em>
+              <span>DRIVER</span><strong>ROKO GRGA</strong><em>FULL-STACK · FEATURED FIVE</em>
             </div>
           </motion.div>
           <div className="hero-proof">
@@ -424,7 +389,7 @@ export default function App() {
         <section className="work-section" id="work" aria-labelledby="work-title">
           <div className="section-intro">
             <span className="section-tag">SELECTED WORK</span>
-            <h2 id="work-title">Five bets.<br />The code is public.</h2>
+            <h2 id="work-title">Five featured bets.<br />The code is public.</h2>
             <p>Not a wall of thumbnails. Each project starts with a problem, takes a position, and leaves receipts.</p>
           </div>
           <div className="projects-list">

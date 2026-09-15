@@ -4,10 +4,10 @@ Roko Grga's portfolio, designed as an editorial motorsport broadcast rather than
 
 ## What is here
 
-- Replayable F1-inspired driver entrance with an original Web Audio synth sting
-- Five evidence-led project case studies with direct public repository links
-- Page-wide surface and accent controls with saved preferences, including Ferrari red
-- Lazy-loaded Three.js journey with five landmarks and a formula-style car that drives between them
+- Replayable F1-inspired driver entrance with a single cinematic action
+- Five featured, evidence-led project case studies with direct public repository links
+- Page-wide surface and accent controls with saved preferences, including Rosso
+- Lazy-loaded Three.js journey with a circuit, five landmarks, and a formula-style car that drives between them
 - Responsive layouts for desktop and mobile
 - Netlify redirects, security headers, metadata, sitemap, and cache rules
 

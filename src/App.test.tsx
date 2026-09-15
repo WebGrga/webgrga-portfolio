@@ -25,9 +25,9 @@ beforeEach(() => {
 afterEach(() => cleanup())
 
 describe('portfolio', () => {
-  it('shows the five public projects and their evidence', () => {
+  it('shows the five featured projects and their evidence', () => {
     render(<App />)
-    expect(screen.getByRole('heading', { name: /five bets/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /five featured bets/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Frontend Director' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'ToDoOfSorts' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Gamefinder' })).toBeInTheDocument()
@@ -38,7 +38,7 @@ describe('portfolio', () => {
   it('changes the page-wide accent and surface theme', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: /open color controls/i }))
-    fireEvent.click(screen.getByRole('button', { name: /use Ferrari red accent/i }))
+    fireEvent.click(screen.getByRole('button', { name: /use Rosso accent/i }))
     fireEvent.click(screen.getByRole('button', { name: /use light surface/i }))
     expect(document.documentElement.dataset.accent).toBe('ferrari')
     expect(document.documentElement.dataset.surface).toBe('light')
