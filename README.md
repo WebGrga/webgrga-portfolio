@@ -1,4 +1,4 @@
-# webgrga.com
+# rokogrga.com
 
 Roko Grga's portfolio, designed as an editorial motorsport broadcast rather than a standard developer card grid.
 
@@ -30,7 +30,7 @@ pnpm test:e2e
 
 ## Deploy to Netlify
 
-Create a new Netlify site from this repository. The included `netlify.toml` uses `pnpm build` and publishes `dist`. Point `webgrga.com` to the resulting site after the production deploy has been checked.
+Create a new Netlify site from this repository. The included `netlify.toml` uses `pnpm build` and publishes `dist`. Point `rokogrga.com` to the resulting site after the production deploy has been checked.
 
 ## Design direction
 
