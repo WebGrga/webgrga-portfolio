@@ -25,14 +25,15 @@ beforeEach(() => {
 afterEach(() => cleanup())
 
 describe('portfolio', () => {
-  it('shows the five featured projects and their evidence', () => {
+  it('shows the three AI showcases with their implementation limits and live dashboard', () => {
     render(<App />)
-    expect(screen.getByRole('heading', { name: /five featured bets/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /three AI systems/i })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Frontend Director' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'ToDoOfSorts' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Gamefinder' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'GearLog' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Momentum Lab' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'BTC–Jev' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Problem Hunter' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /open dashboard/i })).toHaveAttribute('href', 'https://lab.rokogrga.com/btc-jev')
+    expect(screen.getByText(/Paper-only: no real orders/i)).toBeInTheDocument()
+    expect(screen.getByText(/Reliable autonomous opportunity discovery is not established/i)).toBeInTheDocument()
   })
 
   it('changes the page-wide accent and surface theme', () => {

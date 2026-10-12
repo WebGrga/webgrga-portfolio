@@ -1,11 +1,12 @@
 # rokogrga.com
 
-Roko Grga's portfolio, designed as an editorial motorsport broadcast rather than a standard developer card grid.
+Roko Grga's AI engineering portfolio, designed as an editorial motorsport broadcast. The positioning combines agentic workflows with a professional full-stack development background.
 
 ## What is here
 
 - Replayable F1-inspired driver entrance with a single cinematic action
-- Five featured, evidence-led project case studies with direct public repository links
+- Three primary AI case studies: Frontend Director, BTC–Jev, and Problem Hunter, with public repository links and explicit implementation limits
+- A live BTC–Jev evaluation dashboard link and secondary full-stack work
 - Page-wide surface and accent controls with saved preferences, including Rosso
 - Lazy-loaded Three.js journey with a circuit, five landmarks, and a formula-style car that drives between them
 - Responsive layouts for desktop and mobile

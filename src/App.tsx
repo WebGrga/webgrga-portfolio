@@ -4,17 +4,14 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
-  Atom,
   BracketsAngle,
   ChartLineUp,
   Check,
   Code,
   CursorClick,
-  DeviceMobile,
   FlagCheckered,
   GithubLogo,
   Moon,
-  Package,
   Palette,
   ShieldCheck,
   Sun,
@@ -90,8 +87,8 @@ function Intro({ onDone }: { onDone: () => void }) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: reducedMotion ? 0 : 0.8, duration: 0.55 }}
       >
-        <span><b>05</b> featured projects</span>
-        <span><b>04</b> platforms</span>
+        <span><b>03</b> AI showcases</span>
+        <span><b>02</b> years in full-stack</span>
         <span><b>00</b> patience for beige</span>
       </motion.div>
     </motion.div>
@@ -161,45 +158,24 @@ function ProjectArt({ type }: { type: Project['art'] }) {
       </div>
     )
   }
-  if (type === 'todo') {
+  if (type === 'btc') {
     return (
-      <div className="art art-todo" role="img" aria-label="Concept graphic of a task being stamped complete">
-        <span className="todo-date">TODAY · 3 OF 4</span>
-        <div className="todo-line"><span>Ship the stubborn thing</span><Check /></div>
-        <div className="stamp">DONE</div>
-        <span className="todo-foot">LOCAL · QUIET · YOURS</span>
-      </div>
-    )
-  }
-  if (type === 'gamefinder') {
-    return (
-      <div className="art art-gamefinder" role="img" aria-label="Concept ranking graph for game creator opportunity">
-        <div className="finder-axis"><span>attention</span><span>coverage</span></div>
-        {[88, 74, 61, 43].map((score, index) => (
-          <div className="finder-row" key={score}><b>0{index + 1}</b><span style={{ '--score': `${score}%` } as React.CSSProperties} /><em>{score}</em></div>
-        ))}
-        <ChartLineUp className="finder-icon" weight="duotone" />
-      </div>
-    )
-  }
-  if (type === 'gearlog') {
-    return (
-      <div className="art art-gearlog" role="img" aria-label="Concept inventory map for equipment and maintenance">
-        <div className="gear-orbit orbit-one"><Package weight="duotone" /></div>
-        <div className="gear-orbit orbit-two"><ShieldCheck weight="duotone" /></div>
-        <div className="gear-core"><strong>GEAR</strong><span>12 items</span></div>
-        <div className="gear-caption">WARRANTY · SERVICE · VALUE</div>
+      <div className="art art-workflow" role="img" aria-label="Decision workflow: market state, deterministic guardrails, Jev decision, paper simulation, and evaluation">
+        <ChartLineUp weight="duotone" className="workflow-symbol" />
+        <span className="workflow-caption">DECISIONS WITH A RECORD</span>
+        <div className="workflow-steps"><span>Market state</span><span>Code guardrails</span><span>Jev decision</span><span>Paper outcome</span></div>
+        <strong>Evaluate what happened.</strong>
+        <small>Scheduled processing / bounded requests / no real orders</small>
       </div>
     )
   }
   return (
-    <div className="art art-momentum" role="img" aria-label="Concept constellation connecting routines, notes, ideas, and experiments">
-      <div className="momentum-ring ring-one" />
-      <div className="momentum-ring ring-two" />
-      <Atom className="momentum-atom" weight="duotone" />
-      <span className="momentum-label label-a">ROUTINE</span>
-      <span className="momentum-label label-b">IDEA</span>
-      <span className="momentum-label label-c">EXPERIMENT</span>
+    <div className="art art-workflow" role="img" aria-label="Research workflow: public sources, attributed evidence, structured evaluations, and human review">
+      <BracketsAngle weight="duotone" className="workflow-symbol" />
+      <span className="workflow-caption">FINDINGS WITH THEIR SOURCES</span>
+      <div className="workflow-steps"><span>Public sources</span><span>Evidence</span><span>Evaluation</span><span>Human review</span></div>
+      <strong>Keep the uncertainty.</strong>
+      <small>Attribution / caching / cost ledger / audit reports</small>
     </div>
   )
 }
@@ -229,6 +205,7 @@ function ProjectFeature({ project, index }: { project: Project; index: number })
         </dl>
         <div className="project-footer">
           <div className="stack-list">{project.stack.map((item) => <span key={item}>{item}</span>)}</div>
+          {project.demoUrl && <a className="text-link" href={project.demoUrl} target="_blank" rel="noreferrer">Open dashboard <ArrowUpRight /></a>}
           <a className="text-link" href={project.url} target="_blank" rel="noreferrer">Open repository <ArrowUpRight /></a>
         </div>
       </div>
@@ -346,9 +323,9 @@ export default function App() {
         <section className="hero" id="top" ref={heroRef}>
           <div className="hero-grid" aria-hidden="true" />
           <motion.div className="hero-copy" {...heroMotion}>
-            <span className="hero-kicker">FULL-STACK DEVELOPER · BUILDER OF ODDLY SPECIFIC THINGS</span>
+            <span className="hero-kicker">AI ENGINEER · FULL-STACK DEVELOPMENT BACKGROUND</span>
             <h1 aria-label="Software with a pulse."><span>Software with</span><span>a pulse.</span></h1>
-            <p>Web, mobile, and desktop products shaped around real people, sharp interfaces, and stubborn curiosity.</p>
+            <p>AI systems with bounded context, validated outputs, controlled execution, and measurable results. Built on professional full-stack experience.</p>
             <div className="hero-actions">
               <a className="button button-primary" href="#work">See the evidence <ArrowRight /></a>
               <a className="button button-secondary" href="https://github.com/WebGrga" target="_blank" rel="noreferrer">GitHub <ArrowUpRight /></a>
@@ -364,13 +341,13 @@ export default function App() {
             <div className="portrait-halo" />
             <img src="/assets/roko-driver.webp" fetchPriority="high" alt="Roko Grga wearing sunglasses and a fictional charcoal racing suit" />
             <div className="driver-card">
-              <span>DRIVER</span><strong>ROKO GRGA</strong><em>FULL-STACK · FEATURED FIVE</em>
+              <span>DRIVER</span><strong>ROKO GRGA</strong><em>AI SYSTEMS · THREE SHOWCASES</em>
             </div>
           </motion.div>
           <div className="hero-proof">
-            <span><Code weight="fill" /> Product-minded engineering</span>
-            <span><DeviceMobile weight="fill" /> Web, mobile, desktop</span>
-            <span><ShieldCheck weight="fill" /> Honest limits, tested work</span>
+            <span><Code weight="fill" /> Context engineering</span>
+            <span><BracketsAngle weight="fill" /> Validation and evaluation</span>
+            <span><ShieldCheck weight="fill" /> Controlled execution, tested work</span>
           </div>
         </section>
 
@@ -378,7 +355,7 @@ export default function App() {
           <div className="telemetry-track">
             {[false, true].map((duplicate) => (
               <div className="telemetry-group" aria-hidden={duplicate || undefined} key={String(duplicate)}>
-                {['REACT', 'TYPESCRIPT', '.NET', 'KOTLIN', 'PYTHON', 'LOCAL-FIRST'].map((item) => (
+                {['CONTEXT', 'VALIDATION', 'EVALUATION', 'TYPESCRIPT', 'PYTHON', 'DEPLOYMENT'].map((item) => (
                   <span className="telemetry-item" key={item}><span>{item}</span><b aria-hidden="true">/</b></span>
                 ))}
               </div>
@@ -389,13 +366,20 @@ export default function App() {
         <section className="work-section" id="work" aria-labelledby="work-title">
           <div className="section-intro">
             <span className="section-tag">SELECTED WORK</span>
-            <h2 id="work-title">Five featured bets.<br />The code is public.</h2>
-            <p>Not a wall of thumbnails. Each project starts with a problem, takes a position, and leaves receipts.</p>
+            <h2 id="work-title">Three AI systems.<br />The code is public.</h2>
+            <p>Developer tooling, a deployed decision experiment, and research automation. Each makes its context, controls, evidence, and limits visible.</p>
           </div>
           <div className="projects-list">
             {projects.map((project, index) => <ProjectFeature project={project} index={index} key={project.name} />)}
           </div>
         </section>
+
+        <div className="more-work">
+          <p>More from my full-stack background</p>
+          <a href="https://github.com/WebGrga/todo-of-sorts" target="_blank" rel="noreferrer">ToDoOfSorts <ArrowUpRight /></a>
+          <a href="https://github.com/WebGrga/gearlog" target="_blank" rel="noreferrer">GearLog <ArrowUpRight /></a>
+          <a href="https://lab.rokogrga.com" target="_blank" rel="noreferrer">RG Lab <ArrowUpRight /></a>
+        </div>
 
         <Journey accent={accent} reducedMotion={reducedMotion} />
 
@@ -430,7 +414,7 @@ export default function App() {
           <div className="closing-copy">
             <span>THE CHEQUERED FLAG, APPARENTLY</span>
             <h2>Need someone who can think past the ticket?</h2>
-            <p>I bring product judgment, interface taste, and enough engineering range to make the conversation concrete.</p>
+            <p>I bring AI workflow engineering, product judgment, and two years of owning full-stack delivery from requirements to deployment.</p>
           </div>
           <a className="closing-link" href="https://github.com/WebGrga" target="_blank" rel="noreferrer">
             <GithubLogo weight="fill" /> Explore my GitHub <ArrowUpRight />

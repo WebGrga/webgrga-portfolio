@@ -10,7 +10,9 @@ test.beforeEach(async ({ page }) => {
 test('hero, projects, quote, and final link are present', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /Software with a pulse/i })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Frontend Director' })).toHaveCount(1)
-  await expect(page.getByRole('heading', { name: 'Momentum Lab' })).toHaveCount(1)
+  await expect(page.getByRole('heading', { name: 'BTC–Jev' })).toHaveCount(1)
+  await expect(page.getByRole('heading', { name: 'Problem Hunter' })).toHaveCount(1)
+  await expect(page.getByRole('link', { name: /Open dashboard/i })).toHaveAttribute('href', 'https://lab.rokogrga.com/btc-jev')
   await expect(page.getByText(/Technical work gets our attention/i)).toBeVisible()
   await expect(page.getByRole('link', { name: /Explore my GitHub/i })).toHaveAttribute('href', 'https://github.com/WebGrga')
   await expect(page.getByText(/Netlify ready/i)).toHaveCount(0)
