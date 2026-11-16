@@ -1,0 +1,5 @@
+# rokogrga.com, the one-page portfolio (static, no build).
+# The old React portfolio stays on the main branch.
+[build]
+  command = "echo static"
+  publish = "."

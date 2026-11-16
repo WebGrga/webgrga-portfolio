@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roko Grga · AI engineer in Zagreb</title>
+<meta name="description" content="Roko Grga, AI engineer in Zagreb. I build AI agent systems; my main one is the Vale, a pixel-art world where my Claude agents research, build and post.">
+<meta property="og:title" content="Roko Grga · AI engineer in Zagreb">
+<meta property="og:description" content="I build AI agent systems. My main one is the Vale.">
+<meta property="og:image" content="https://rokogrga.com/assets/vale.jpg">
+<meta property="og:url" content="https://rokogrga.com/">
+<meta property="og:type" content="profile">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://rokogrga.com/">
+<link rel="icon" href="assets/img/favicon.png">
+<link rel="preload" href="assets/fonts/PixelifySans-600-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"ProfilePage","@id":"https://rokogrga.com/#page","url":"https://rokogrga.com/","name":"Roko Grga · AI engineer","mainEntity":{"@id":"https://rokogrga.com/#roko"}},
+{"@type":"Person","@id":"https://rokogrga.com/#roko","name":"Roko Grga","url":"https://rokogrga.com/","image":"https://rokogrga.com/assets/img/roko.webp","jobTitle":"AI engineer","description":"AI engineer in Zagreb. Before this: two years as the only developer at a design agency, 10+ client sites.","email":"mailto:rokogrga44@gmail.com","homeLocation":{"@type":"Place","name":"Zagreb, Croatia"},"alumniOf":{"@type":"CollegeOrUniversity","name":"RIT Croatia"},"sameAs":["https://www.youtube.com/@RokoTheG","https://github.com/WebGrga","https://www.linkedin.com/in/roko-grga"],"knowsAbout":["AI agents","MCP","Context engineering","LLM evaluation","TypeScript","Node.js","Python","React","Next.js","PostgreSQL","Cloudflare Workers"]},
+{"@type":"SoftwareApplication","@id":"https://vale.rokogrga.com/#app","name":"The Vale","url":"https://vale.rokogrga.com/","applicationCategory":"DeveloperApplication","author":{"@id":"https://rokogrga.com/#roko"}},
+{"@type":"WebApplication","name":"BTC–Jev","url":"https://lab.rokogrga.com/btc-jev","description":"An AI judges paper BTC trades on live data; every decision is on a public log.","author":{"@id":"https://rokogrga.com/#roko"}},
+{"@type":"WebApplication","name":"Localens","url":"https://lab.rokogrga.com/localens/","sameAs":"https://github.com/WebGrga/localens","description":"Checks whether ChatGPT, Gemini and Perplexity recommend a local business.","author":{"@id":"https://rokogrga.com/#roko"}},
+{"@type":"WebApplication","name":"Calendogram","url":"https://lab.rokogrga.com/calendogram/","description":"Speak one note on site; it becomes dated tasks for the right people.","author":{"@id":"https://rokogrga.com/#roko"}},
+{"@type":"WebApplication","name":"Gamefinder","url":"https://lab.rokogrga.com/gamefinder/","description":"Ranks indie games by how worth a YouTube video they are, with the reasons.","author":{"@id":"https://rokogrga.com/#roko"}}
+]}
+</script>
+<style>
+@font-face{font-family:"Pixelify Sans";font-weight:600 700;font-display:swap;src:url(assets/fonts/PixelifySans-600-normal-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F,U+2190-2193}
+@font-face{font-family:"Pixelify Sans";font-weight:600 700;font-display:swap;src:url(assets/fonts/PixelifySans-600-normal-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+1E00-1EFF}
+@font-face{font-family:Literata;font-weight:400;font-display:swap;src:url(assets/fonts/Literata-400-normal-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:Literata;font-weight:400;font-display:swap;src:url(assets/fonts/Literata-400-normal-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+1E00-1EFF}
+:root{--night:#1b1b2a;--panel:#f5efe0;--paper2:#e9dfc8;--ink:#2a2438;--wood:#a9754a;--wood2:#7a5134;--red:#c44d3a;--red-ink:#a8402f;--gold:#e9b04d;--muted:#5b4a3c;--ease:cubic-bezier(.2,.75,.25,1)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--night);color:var(--panel);font:18px/1.6 Literata,Georgia,serif}
+img,video{max-width:100%;height:auto;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{max-width:732px;margin:0 auto;padding:0 20px}
+.road{height:72px;background:url(assets/art/ter_t43.png) 0 24px/48px 48px repeat-x,url(assets/art/ter_t0.png) 0 0/48px 48px;image-rendering:pixelated;border-bottom:4px solid var(--ink)}
+main{padding-top:40px}
+.card{background:var(--panel);color:var(--ink);border:6px solid var(--wood);box-shadow:0 0 0 6px var(--ink),0 12px 0 6px rgba(0,0,0,.3);padding:24px 28px;margin:0 6px 40px}
+h1,h2{font-family:"Pixelify Sans",system-ui,sans-serif;font-weight:700;margin:0;line-height:1.05}
+h2{font-size:32px;margin-bottom:6px}
+.label{font:600 16px "Pixelify Sans";letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin:0 6px 14px}
+
+/* about */
+.top{display:flex;align-items:center;gap:22px;margin-bottom:16px}
+.avatar{width:104px;height:104px;flex:none;border:4px solid var(--ink);box-shadow:4px 4px 0 var(--wood)}
+.top h1{font-size:clamp(42px,8vw,64px);text-shadow:0 4px 0 rgba(196,77,58,.3)}
+.role{font:600 22px/1.3 "Pixelify Sans";color:var(--red-ink);margin:8px 0 0}
+.lead{font-size:20px;line-height:1.55;margin:0 0 10px}
+.status{font-size:18px;color:var(--ink);margin:0 0 16px}
+.before{margin:0 0 10px}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
+.links a{display:inline-flex;align-items:center;min-height:44px;padding:6px 14px 8px;font:700 18px/1 "Pixelify Sans";text-decoration:none;background:var(--paper2);border:3px solid var(--ink);box-shadow:0 4px 0 var(--ink);transition:transform .15s var(--ease),box-shadow .15s var(--ease),background .15s}
+.links a:hover{transform:translateY(2px);box-shadow:0 2px 0 var(--ink);background:var(--gold)}
+.links .mail a{background:var(--red-ink);color:var(--panel)}
+.links .mail a:hover{background:#8f3626}
+
+/* the Vale */
+.vale{padding:0;overflow:hidden}
+.vale .media{position:relative;border-bottom:6px solid var(--wood);background:#3d6b35}
+.vale .media:after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 3px rgba(42,36,56,.55),inset 0 0 22px 10px rgba(36,58,30,.75)}
+.vale video{width:100%;aspect-ratio:1280/584;object-fit:cover}
+.vale .pause{position:absolute;left:12px;top:12px;min-height:44px;min-width:44px;font:700 16px/1 "Pixelify Sans";background:rgba(245,239,224,.92);color:var(--ink);border:3px solid var(--ink);padding:8px 12px 10px;cursor:pointer}
+.vale .in{padding:22px 28px 28px}
+.vale h2{font-size:clamp(40px,7vw,56px);margin-bottom:12px}
+.vale p{margin:0 0 22px}
+.btns{display:flex;flex-wrap:wrap;gap:16px}
+.btn{display:inline-flex;align-items:center;min-height:48px;font:700 19px/1.1 "Pixelify Sans";text-decoration:none;color:var(--ink);background:var(--panel);padding:10px 18px 12px;border:4px solid var(--ink);box-shadow:inset -4px -4px 0 rgba(0,0,0,.12),0 6px 0 var(--ink);transition:transform .15s var(--ease),box-shadow .15s var(--ease)}
+.btn:hover{transform:translateY(2px);box-shadow:inset -4px -4px 0 rgba(0,0,0,.12),0 4px 0 var(--ink)}
+.btn.red{background:var(--red-ink);color:var(--panel)}
+
+/* lab */
+.lab > p{margin:0 0 12px}
+.items{list-style:none;padding:0;margin:0 0 6px;display:grid;gap:4px}
+.items li{border-top:2px dashed #d8c9a8;padding:8px 0 9px;font-size:17px;line-height:1.45}
+.items a{display:inline-block;padding:11px 0;margin:-11px 8px -11px 0;font:700 19px/1.2 "Pixelify Sans";color:var(--red-ink);text-underline-offset:3px}
+.go{display:inline-flex;align-items:center;min-height:44px;font:700 18px "Pixelify Sans";color:var(--red-ink);text-underline-offset:4px}
+
+/* skills */
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0}
+.chips li{font:600 16px/1 "Pixelify Sans";background:var(--paper2);border:3px solid var(--ink);padding:6px 9px 8px}
+.skills{list-style:none;padding:0;margin:0}
+.skills li{border-top:2px dashed #d8c9a8;padding:10px 0;font-size:17px;line-height:1.45}
+.skills li:first-child{border-top:0}
+.skills b{display:block;font:700 18px/1.3 "Pixelify Sans";margin-bottom:2px}
+.skills a{color:var(--red-ink);font-weight:600;white-space:nowrap;text-underline-offset:3px}
+
+footer{padding:0 0 48px;font-size:16px;color:#cfc4ae;text-align:center}
+footer a{color:var(--gold);display:inline-block;padding:12px 0}
+
+@media(max-width:600px){
+  main{padding-top:32px}
+  .card{padding:22px 18px;margin-bottom:44px}
+  .card.vale{padding:0}
+  .vale .in{padding:20px 18px 24px}
+  .top{gap:16px}
+  .avatar{width:72px;height:72px}
+  .role{font-size:19px}
+  .lead{font-size:18px}
+  .vale video{aspect-ratio:4/3}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .links a{justify-content:center;width:100%;padding:6px 8px 8px}
+  .links a{white-space:nowrap}
+  .vale .pause{left:8px;top:8px;padding:6px 10px 8px}
+  h2{font-size:30px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="road" aria-hidden="true"></div>
+<main class="wrap">
+
+<section class="card" aria-label="About me">
+  <div class="top">
+    <img class="avatar" src="assets/img/roko.webp" alt="Roko Grga" width="104" height="104">
+    <div>
+      <h1>Roko Grga</h1>
+      <p class="role">AI engineer · Zagreb</p>
+    </div>
+  </div>
+  <p class="lead">I build AI agent systems. My main one is the Vale: a pixel-art world where my Claude agents research, build and post, and nothing goes out without my yes.</p>
+  <p class="before">Before this: two years as the only developer at a design agency, 10+ client sites.</p>
+  <p class="status">Open to AI engineering roles · Zagreb, hybrid or remote · BSc RIT Croatia 2026</p>
+  <ul class="links">
+    <li class="mail"><a href="mailto:rokogrga44@gmail.com">Email me</a></li>
+    <li><a href="https://www.linkedin.com/in/roko-grga">LinkedIn</a></li>
+    <li><a href="assets/RokoGrga-CV.pdf" type="application/pdf" aria-label="CV (PDF)">CV</a></li>
+    <li><a href="https://github.com/WebGrga">GitHub</a></li>
+    <li><a href="https://www.youtube.com/@RokoTheG">YouTube</a></li>
+    <li><a href="https://vale.rokogrga.com/blog/">Blog</a></li>
+  </ul>
+</section>
+
+<p class="label">Main project</p>
+<section class="card vale" aria-labelledby="vale">
+  <div class="media">
+    <video muted loop playsinline preload="metadata" width="1280" height="584" poster="assets/img/vale-poster.webp" data-wide="assets/img/vale-loop.mp4" data-phone="assets/img/vale-phone.mp4" data-phone-poster="assets/img/vale-phone-poster.webp" aria-label="The Vale's map: villages of AI agents, with residents walking between houses"></video>
+    <button class="pause" type="button" aria-pressed="false" hidden>Pause</button>
+  </div>
+  <div class="in">
+    <h2 id="vale">The Vale</h2>
+    <p>Ten villages of AI agents that research, build sites and apps, edit videos and write posts, and hand work to each other. Every step waits for my approval; it plans my day before my coffee is done.</p>
+    <div class="btns">
+      <a class="btn red" href="https://vale.rokogrga.com/">Visit the Vale →</a>
+      <a class="btn" href="https://www.youtube.com/watch?v=D9SgLZhsdkc">Watch Devlog 1</a>
+    </div>
+  </div>
+</section>
+
+<section class="card lab" aria-labelledby="lab">
+  <h2 id="lab">The Lab</h2>
+  <p>Smaller things I built. Most run right in the browser.</p>
+  <ul class="items">
+    <li><a href="https://lab.rokogrga.com/btc-jev">BTC–Jev</a> An AI judges paper BTC trades on live data; every decision is on a public log.</li>
+    <li><a href="https://lab.rokogrga.com/localens/">Localens</a> Checks whether ChatGPT, Gemini and Perplexity recommend a local business.</li>
+    <li><a href="https://lab.rokogrga.com/calendogram/">Calendogram</a> Speak one note on site; it becomes dated tasks for the right people.</li>
+    <li><a href="https://lab.rokogrga.com/gamefinder/">Gamefinder</a> Ranks indie games by how worth a YouTube video they are, with the reasons.</li>
+  </ul>
+  <a class="go" href="https://lab.rokogrga.com/">All experiments → lab.rokogrga.com</a>
+</section>
+
+<section class="card" aria-labelledby="skills">
+  <h2 id="skills">Skills</h2>
+  <ul class="skills">
+    <li><b>AI agents &amp; orchestration</b> Ten villages of agents that order work from each other, with approval gates and a shared work queue. <a href="https://vale.rokogrga.com">The Vale</a></li>
+    <li><b>MCP &amp; tool design</b> I wrote the MCP server the Vale's agents use: a browser, journeys, screenshots, all limited to safe paths. <a href="https://vale.rokogrga.com">The Vale</a></li>
+    <li><b>Context engineering</b> Each agent carries only its own skills and lessons; Frontend Director gives the model a bounded slice of the source. <a href="https://github.com/WebGrga/frontend-director">Frontend Director</a></li>
+    <li><b>LLM evals &amp; cost control</b> Every AI decision on a public log, scored against outcomes; cost per call tracked with spending caps. <a href="https://lab.rokogrga.com/btc-jev">BTC–Jev</a> · <a href="https://github.com/WebGrga/localens">Localens</a></li>
+    <li><b>Testing</b> About 490 tests gate every self-update of the Vale; about 1,000 in Localens. <a href="https://vale.rokogrga.com">The Vale</a> · <a href="https://github.com/WebGrga/localens">Localens</a></li>
+    <li><b>TypeScript, React / Next.js, PostgreSQL</b> Localens is a Next.js app on PostgreSQL; Frontend Director edits React code. <a href="https://github.com/WebGrga/localens">Localens</a></li>
+    <li><b>Node.js</b> The Vale's server: two dependencies, restarts itself on new code. <a href="https://vale.rokogrga.com">The Vale</a></li>
+    <li><b>Python</b> Problem Hunter's research pipeline and Gamefinder's scoring; I taught Python to first-years. <a href="https://github.com/WebGrga/problemhunter">Problem Hunter</a></li>
+    <li><b>Cloudflare Workers</b> BTC–Jev runs on Workers and D1 on a schedule. <a href="https://github.com/WebGrga/btc-jev-signal">BTC–Jev</a></li>
+  </ul>
+</section>
+
+</main>
+<footer class="wrap">© 2026 Roko Grga · Zagreb · <a href="mailto:rokogrga44@gmail.com">rokogrga44@gmail.com</a> · Pixel art by <a href="https://www.kenney.nl">Kenney</a> (CC0)</footer>
+<script>
+(()=>{const v=document.querySelector('.vale video'),b=document.querySelector('.vale .pause');if(!v)return;
+const phone=matchMedia('(max-width: 600px)').matches;
+if(phone)v.poster=v.dataset.phonePoster;
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!calm)v.autoplay=true;
+v.src=phone?v.dataset.phone:v.dataset.wide;
+if(calm)return;
+let held=false;b.hidden=false;
+b.onclick=()=>{held=!held;b.setAttribute('aria-pressed',held);b.textContent=held?'Play':'Pause';if(held)v.pause();else{v.preload='auto';v.play().catch(()=>{})}};
+new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&!held){v.preload='auto';v.play().catch(()=>{})}else v.pause()}),{threshold:.1}).observe(v)})();
+</script>
+</body>
+</html>
